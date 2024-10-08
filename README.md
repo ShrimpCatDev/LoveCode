@@ -1,4 +1,4 @@
-# MakeLove
+# LoveCode
 An implementation of Makecode Arcade in LÖVE
 
 This is a BIG work in progress!
