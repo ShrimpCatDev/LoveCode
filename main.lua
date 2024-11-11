@@ -8,13 +8,16 @@ function love.load()
 
     require("mcAPI")
     require("code")
+    timeEEE=0
     
     gameStart()
-    camera={x=0,y=0}
+    SystemFont=love.graphics.newImageFont("assets/font.png",[[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!@#$%^&*(){}[]"'?/+-,.:;~`\|🙂🙁]] ,1)
+    love.graphics.setFont(SystemFont)
 end
 
 function love.update(dt)
     gameUpdate(dt)
+    timeEEE=timeEEE+1
 end
 
 local t=0
@@ -22,7 +25,6 @@ function love.draw()
     
     push:start()
     love.graphics.clear()
-    love.graphics.translate(-camera.x,-camera.y)
     if bgimg~= nil then love.graphics.draw(bgimg,0,0) end
     gameDraw()
     push:finish()

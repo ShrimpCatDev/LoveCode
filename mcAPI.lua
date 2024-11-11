@@ -1,7 +1,7 @@
 --MakeCode Arcade API
 local bump = require 'lib/bump'
 world = bump.newWorld(64)
-local isUsingMap=false
+camera={x=0,y=0}
 
 function newSprite(var,im, ty,wi,he)
     table.insert(var,{
@@ -72,21 +72,6 @@ function updateSprites(var)
         end
         local aX,aY,cols,len= world:move(s,s.x+s.vx,s.y+s.vy,filter)
         s.x,s.y=aX,aY
-
-        for i=1,len do
-            if cols[i].normal.y==-1 and s.accy>0 then
-                s.vy=0
-            elseif cols[i].normal.y==1 and s.accy<0 then
-                s.vy=0
-            elseif cols[i].normal.x==1 and s.accx<0 then
-                s.vx=0
-            elseif  cols[i].normal.x==-1 and s.accx>0 then
-                s.vx=0
-            else
-
-            end
-        end
-
     end
 end
 
@@ -104,6 +89,7 @@ function setSpritePosition(var,x,y,index)
         var[index or #var].y=y-tempoo.h/2
         world:update(var[index or #var], tempoo.x-tempoo.w/2,tempoo.y-tempoo.h/2)
     else
+        --local tempoo=var[index or #var]
         var[index or #var].x=x
         var[index or #var].y=y
         world:update(var[index or #var], tempoo.x,tempoo.y)
@@ -122,10 +108,17 @@ end
 
 function setSpritePositionX(var,x,index)
     var[index or #var].x=x
+    local tempoo=var[index or #var]
+    var[index or #var].x=x
+    var[index or #var].y=y
+    world:update(var[index or #var], tempoo.x,tempoo.y)
 end
 
 function setSpritePositionY(var,x,index)
     var[index or #var].y=x
+    var[index or #var].x=x
+    var[index or #var].y=y
+    world:update(var[index or #var], tempoo.x,tempoo.y)
 end
 
 function getSpritePositionX(var,x,index)
@@ -152,7 +145,6 @@ end
 function spritesAreColliding(s1,s2)
     col(s1.x,s1.y,s2.x,s2.y,s1.w,s1.h,s2.w,s2.h)
 end
-
 function keyPressed(k)
     return love.keyboard.isDown(k)
 end
@@ -172,7 +164,6 @@ function filter(self,other)
 end
 
 function newMap(path)
-    isUsingMap=true
     return sti(path,{"bump"})
 end
 
@@ -189,6 +180,29 @@ function setTile(layer,x,y,id,mapp)
     mapp:setLayerTile (layer, x, y, id)
 end
 
+function setCameraPosition(x,y)
+camera.x,camera.y=x,y
+end
+
+function getCameraPosition()
+    return camera.x,camera.y
+end
+
+
+function HexColor(hex, value)
+	return {tonumber(string.sub(hex, 2, 3), 16)/256, tonumber(string.sub(hex, 4, 5), 16)/256, tonumber(string.sub(hex, 6, 7), 16)/256, value or 1}
+end
+
+function printText(text,x,y,color)
+    love.graphics.setColor(HexColor(color or "#ffffff"))
+    love.graphics.print(text,x,y)
+    love.graphics.setColor(1,1,1)
+end
+
+function gameTime()
+    return timeEEE
+end
+
 function getWall(layer,x,y,mapp)
     local tt=mapp:getTileProperties(layer,x+1,y+1)
     if tt.collidable then
@@ -196,6 +210,5 @@ function getWall(layer,x,y,mapp)
     end
 end
 
-function setCameraPosition(x,y)
-    camera.x,camera.y=x,y
-end
+
+
